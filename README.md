@@ -2,5 +2,5 @@
 
 credentials
 
-admin
-12345
+username: admin
+passsword: 12345
