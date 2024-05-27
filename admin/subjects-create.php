@@ -21,12 +21,18 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="">Subject Type *</label>
-                        <select name="subject_type" class="form-control" required>
+                        <select name="subject_type" class="form-control select2" required>
                             <option value="">-- Select --</option>
-                            <!-- Add options here -->
                             <option value="1">Core Subjects</option>
                             <option value="2">Applied and Specialized Subjects</option>
-                            <!-- Add more options as needed -->
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="">Semester *</label>
+                        <select name="semester" class="form-control select2" required>
+                            <option value="">-- Select --</option>
+                            <option value="First Semester">First Semester</option>
+                            <option value="Second Semester">Second Semester</option>
                         </select>
                     </div>
                     <div class="col-md-12 mb-3">

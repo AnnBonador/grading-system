@@ -9,7 +9,6 @@ if(isset($_SESSION['loggedIn']))
 
 ?>
 
-
     <div class="limiter">
         <div class="container-login100" style="background-image: url('login-assets/images/bg-01.jpg')">
             <div class="wrap-login100 p-t-30 p-b-50">

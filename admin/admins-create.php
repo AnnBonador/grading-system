@@ -3,7 +3,7 @@
 <div class="container-fluid px-4">
     <div class="card mt-4 shadow">
         <div class="card-header">
-            <h4 class="mb-0">Add Admin
+            <h4 class="mb-0">Add User
                 <a href="admins.php" class="btn btn-primary float-end">Back</a>
             </h4>
         </div>
@@ -22,6 +22,14 @@
                     <div class="col-md-6 mb-3">
                         <label for="">Email *</label>
                         <input type="text" name="email" class="form-control" required/>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="">Role *</label>
+                        <select name="role" class="form-control select2" required>
+                            <option value="">-- Select --</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Teacher">Teacher</option>
+                        </select>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="">Password *</label>

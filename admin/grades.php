@@ -3,40 +3,38 @@
 <div class="container-fluid px-4">
     <div class="card mt-4 shadow">
         <div class="card-header">
-            <h4 class="mb-0">Students
-                <a href="students-create.php" class="btn btn-primary float-end">Add Student</a>
+            <h4 class="mb-0">Student Record
+                <a href="subjects-create.php" class="btn btn-primary float-end">Add Grades</a>
             </h4>
         </div>
         <div class="card-body">
             <?php alertMessage(); ?>
             <?php
-            $students = getAll('students');
-            if (!$students) {
+            $subjects = getAll('students');
+            if (!$subjects) {
                 echo '<h4>Something Went Wrong!</h4>';
                 return false;
             }
-            if (mysqli_num_rows($students) > 0) {
+            if (mysqli_num_rows($subjects) > 0) {
 
             ?>
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered" id="students_table">
+                    <table class="table table-striped table-bordered" id="subjects_table">
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>LRN NO.</th>
                                 <th>Name</th>
-                                <th>Age</th>
                                 <th>Gender</th>
-                                <th>LRN</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($students as  $item) : ?>
+                            <?php foreach ($subjects as  $item) : ?>
                                 <tr>
                                     <td><?= $item['id'] ?></td>
+                                    <td><?= $item['lrn'] ?></td>
                                     <td><?= $item['name'] ?></td>
-                                    <td><?= calculateAge($item['age']); ?></td>
                                     <td>
                                         <?php
                                         if ($item['gender'] === 'm') {
@@ -48,19 +46,10 @@
                                         }
                                         ?>
                                     </td>
-                                    <td><?= $item['lrn'] ?></td>
                                     <td>
-                                        <?php
-                                        if ($item['status'] == 1) {
-                                            echo '<span class="badge bg-success">Inactive</span>';
-                                        } else {
-                                            echo '<span class="badge bg-primary">Active</span>';
-                                        } ?>
-                                    </td>
-                                    <td>
-                                        <a href="students-edit.php?id=<?= $item['id']; ?>" class="btn btn-success btn-sm">Edit</a>
-                                        <a href="students-delete.php?id=<?= $item['id']; ?>" class="btn btn-danger btn-sm"
-                                        onclick="return confirm('Are you sure you want to delete this data?')">Delete</a>
+                                        <a href="grades-edit.php?id=<?= $item['id']; ?>" class="btn btn-success btn-sm">Edit</a>
+                                        <a href="grades-edit.php?id=<?= $item['id']; ?>" class="btn btn-secondary btn-sm">View</a>
+                                        <a href="grades-delete.php?id=<?= $item['id']; ?>" class="btn btn-primary btn-sm">Print</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -83,6 +72,6 @@
 <?php include('includes/footer.php') ?>
 <script>
 $(document).ready(function() {
-    $('#students_table').DataTable();
+    $('#subjects_table').DataTable();
 });
 </script>

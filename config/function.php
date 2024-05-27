@@ -170,4 +170,40 @@ function isNameUnique($table, $name, $excludeId = null){
     $result = executeQuery($query, $params);
     return $result['count'] == 0;
 }
+
+function calculateAge($birthDate) {
+    // Create a DateTime object from the birth date
+    $birthDate = new DateTime($birthDate);
+    $currentDate = new DateTime();
+    $age = $currentDate->diff($birthDate);
+    return $age->y;
+}
+
+function getTeachers($tableName){
+
+    global $conn;
+
+    $table = validate($tableName);
+
+    $query = "SELECT * FROM $table WHERE role = 'Teacher'";
+
+    return mysqli_query($conn,$query);
+
+}
+
+function getCount($tableName)
+{
+    global $conn;
+    $table = validate($tableName);
+    $query = "SELECT * FROM $table";
+    $query_run = mysqli_query($conn, $query);
+    if($query_run){
+        $totalCount = mysqli_num_rows($query_run);
+        return $totalCount;
+    }else{
+        return 'Something Went Wrong!';
+    }
+}
+
 ?>
+

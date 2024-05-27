@@ -9,9 +9,9 @@ if (is_numeric($paraResultId)) {
 
     $admin = getById('admins', $adminId);
     if ($admin['status'] == 200) {
-        $response = delete('admins', $adminId);
-        if ($response) {
-            redirect('admins.php', 'Admin Deleted Successfully');
+        $adminDeleteRes = delete('admins', $adminId);
+        if ($adminDeleteRes) {
+            redirect('admins.php', 'User Deleted Successfully');
         } else {
             redirect('admins.php', 'Something Went Wrong');
         }

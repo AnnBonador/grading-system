@@ -3,8 +3,8 @@
 <div class="container-fluid px-4">
     <div class="card mt-4 shadow">
         <div class="card-header">
-            <h4 class="mb-0">Admins/Teacher
-                <a href="admins-create.php" class="btn btn-primary float-end">Add Admin</a>
+            <h4 class="mb-0">Users
+                <a href="admins-create.php" class="btn btn-primary float-end">Add User</a>
             </h4>
         </div>
         <div class="card-body">
@@ -26,6 +26,7 @@
                                 <th>Username</th>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Role</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -36,9 +37,10 @@
                                     <td><?= $admin['username'] ?></td>
                                     <td><?= $admin['name'] ?></td>
                                     <td><?= $admin['email'] ?></td>
+                                    <td><?= $admin['role'] ?></td>
                                     <td>
                                         <a href="admins-edit.php?id=<?= $admin['id']; ?>" class="btn btn-success btn-sm">Edit</a>
-                                        <a href="admins-delete.php?id=<?= $admin['id']; ?>" class="btn btn-danger btn-sm">Delete</a>
+                                        <a href="admins-delete.php?id=<?= $admin['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this data?')">Delete</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

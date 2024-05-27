@@ -33,10 +33,18 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="">Subject Type *</label>
-                            <select name="subject_type" class="form-control" required>
+                            <select name="subject_type" class="form-control select2" required>
                                 <option value="">-- Select --</option>
                                 <option value="1" <?= $subject['data']['subject_type'] == 1 ? 'selected' : ''; ?>>Core Subjects</option>
                                 <option value="2" <?= $subject['data']['subject_type'] == 2 ? 'selected' : ''; ?>>Applied and Specialized Subjects</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="">Semester *</label>
+                            <select name="semester" class="form-control select2" required>
+                                <option value="">-- Select --</option>
+                                <option value="First Semester" <?= $subject['data']['semester'] == 'First Semester' ? 'selected' : ''; ?>>First Semester</option>
+                                <option value="Second Semester" <?= $subject['data']['semester'] == 'Second Semester' ? 'selected' : ''; ?>>Second Semester</option>
                             </select>
                         </div>
                         <div class="col-md-12 mb-3">

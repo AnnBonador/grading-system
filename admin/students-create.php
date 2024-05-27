@@ -16,7 +16,7 @@
                         <input type="text" name="name" class="form-control" required />
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="">Birthday *</label>
+                        <label for="">Date of Birth *</label>
                         <input type="date" name="birthday" class="form-control" required />
                     </div>
                     <div class="col-md-6 mb-3">
@@ -35,10 +35,6 @@
                     <div class="col-md-6 mb-3">
                         <label for="">LRN *</label>
                         <input type="number" name="lrn" class="form-control" required />
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="">Section</label>
-                        <input type="text" name="section" class="form-control" />
                     </div>
                     <div class="col-md-12 mb-3">
                         <div class="form-check">

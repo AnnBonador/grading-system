@@ -3,7 +3,7 @@
 <div class="container-fluid px-4">
     <div class="card mt-4 shadow">
         <div class="card-header">
-            <h4 class="mb-0">Add Student
+            <h4 class="mb-0">Edit Student
                 <a href="students.php" class="btn btn-primary float-end">Back</a>
             </h4>
         </div>
@@ -28,7 +28,7 @@
                             <input type="text" name="name" value="<?= $student['data']['name']; ?>" class="form-control" required />
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="">Birthday *</label>
+                            <label for="">Date of Birth *</label>
                             <input type="date" name="birthday" value="<?= $student['data']['age']; ?>" class="form-control" required />
                         </div>
                         <div class="col-md-6 mb-3">
@@ -48,10 +48,6 @@
                         <div class="col-md-6 mb-3">
                             <label for="">LRN *</label>
                             <input type="number" name="lrn" class="form-control" value="<?= $student['data']['lrn']; ?>" required />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="">Section</label>
-                            <input type="text" name="section" value="<?= $student['data']['section']; ?>" class="form-control" />
                         </div>
                         <div class="col-md-12 mb-3">
                             <div class="form-check">
