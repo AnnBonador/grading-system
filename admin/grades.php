@@ -4,13 +4,13 @@
     <div class="card mt-4 shadow">
         <div class="card-header">
             <h4 class="mb-0">Student Record
-                <a href="subjects-create.php" class="btn btn-primary float-end">Add Grades</a>
+                <a href="grades-create.php" class="btn btn-primary float-end">Add Grades</a>
             </h4>
         </div>
         <div class="card-body">
             <?php alertMessage(); ?>
             <?php
-            $subjects = getAll('students');
+            $subjects = getAll('grades');
             if (!$subjects) {
                 echo '<h4>Something Went Wrong!</h4>';
                 return false;
@@ -23,9 +23,8 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>LRN NO.</th>
                                 <th>Name</th>
-                                <th>Gender</th>
+                                <th>Class</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -33,22 +32,11 @@
                             <?php foreach ($subjects as  $item) : ?>
                                 <tr>
                                     <td><?= $item['id'] ?></td>
-                                    <td><?= $item['lrn'] ?></td>
-                                    <td><?= $item['name'] ?></td>
-                                    <td>
-                                        <?php
-                                        if ($item['gender'] === 'm') {
-                                            echo 'Male';
-                                        } elseif ($item['gender'] === 'f') {
-                                            echo 'Female';
-                                        } else {
-                                            echo 'Unknown';
-                                        }
-                                        ?>
-                                    </td>
+                                    <td><?= $item['student_id'] ?></td>
+                                    <td><?= $item['class_id'] ?></td>
                                     <td>
                                         <a href="grades-edit.php?id=<?= $item['id']; ?>" class="btn btn-success btn-sm">Edit</a>
-                                        <a href="grades-edit.php?id=<?= $item['id']; ?>" class="btn btn-secondary btn-sm">View</a>
+                                        <a href="grades-view.php?id=<?= $item['id']; ?>" class="btn btn-secondary btn-sm" target="_blank">View</a>
                                         <a href="grades-delete.php?id=<?= $item['id']; ?>" class="btn btn-primary btn-sm">Print</a>
                                     </td>
                                 </tr>

@@ -39,14 +39,6 @@
                                 <option value="2" <?= $subject['data']['subject_type'] == 2 ? 'selected' : ''; ?>>Applied and Specialized Subjects</option>
                             </select>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="">Semester *</label>
-                            <select name="semester" class="form-control select2" required>
-                                <option value="">-- Select --</option>
-                                <option value="First Semester" <?= $subject['data']['semester'] == 'First Semester' ? 'selected' : ''; ?>>First Semester</option>
-                                <option value="Second Semester" <?= $subject['data']['semester'] == 'Second Semester' ? 'selected' : ''; ?>>Second Semester</option>
-                            </select>
-                        </div>
                         <div class="col-md-12 mb-3">
                             <div class="form-check">
                                 <input class="form-check-input" name="status" type="checkbox" <?= $subject['data']['status'] == true ? 'checked' : ''; ?>>

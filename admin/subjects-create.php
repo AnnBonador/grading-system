@@ -27,14 +27,6 @@
                             <option value="2">Applied and Specialized Subjects</option>
                         </select>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="">Semester *</label>
-                        <select name="semester" class="form-control select2" required>
-                            <option value="">-- Select --</option>
-                            <option value="First Semester">First Semester</option>
-                            <option value="Second Semester">Second Semester</option>
-                        </select>
-                    </div>
                     <div class="col-md-12 mb-3">
                         <div class="form-check">
                             <input class="form-check-input" name="status" type="checkbox">

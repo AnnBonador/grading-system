@@ -80,7 +80,6 @@ if (isset($_POST['updateAdmin'])) {
 if (isset($_POST['saveSubject'])) {
     $name = validate($_POST['name']);
     $subject_code = validate($_POST['subject_code']);
-    $semester = validate($_POST['semester']);
     $status = isset($_POST['status']) ? 1 : 0;
     $subject_type = validate($_POST['subject_type']);
 
@@ -91,7 +90,6 @@ if (isset($_POST['saveSubject'])) {
             'name' => $name,
             'subject_code' => $subject_code,
             'subject_type' => $subject_type,
-            'semester' => $semester,
             'status' => $status
         ];
         $result = insert('subjects', $data);
@@ -107,7 +105,6 @@ if (isset($_POST['updateSubject'])) {
     $subjectId = validate($_POST['subjectId']);
     $name = validate($_POST['name']);
     $subject_code = validate($_POST['subject_code']);
-    $semester = validate($_POST['semester']);
     $status = isset($_POST['status']) ? 1 : 0;
     $subject_type = validate($_POST['subject_type']);
 
@@ -118,7 +115,6 @@ if (isset($_POST['updateSubject'])) {
             'name' => $name,
             'subject_code' => $subject_code,
             'subject_type' => $subject_type,
-            'semester' => $semester,
             'status' => $status
         ];
         $result = update('subjects', $subjectId, $data);
@@ -212,6 +208,34 @@ if (isset($_POST['saveClass'])) {
     echo json_encode($response);
 }
 
+if (isset($_POST['updateClass'])) {
+    $classDataJson = $_POST['classData'];
+
+    $classDataArray = json_decode($classDataJson, true);
+
+    $classId = $classDataArray['classId'];
+    $className = $classDataArray['name'];
+    $academicYear = $classDataArray['academic_year'];
+    $semesters = $classDataArray['semesters'];
+
+    if (!isNameUnique('classes', $className, $classId)) {
+        $response = array("success" => false, "message" => "Class name already exists");
+    } else {
+        $data = [
+            'name' => $className,
+            'academic_year' => $academicYear,
+            'subjects' => json_encode($semesters)
+        ];
+        $result = update('classes', $classId, $data);
+        if ($result) {
+            $response = array("success" => true, "message" => "Class Updated Successfully");
+        } else {
+            $response = array("success" => false, "message" => "Something went wrong");
+        }
+    }
+    echo json_encode($response);
+}
+
 
 if (isset($_POST['sectionId'])) {
     $sectionId = $_POST['sectionId'];
@@ -240,22 +264,22 @@ if (isset($_POST['sectionId'])) {
 
                 $tableRows .= '<tr>';
                 $tableRows .= '<td>' . $subjectName . '</td>';
-                $tableRows .= '<td><input type="number" class="form-control text-end"/></td>'; // Q1
-                $tableRows .= '<td><input type="number" class="form-control text-end"/></td>'; // Q2
-                $tableRows .= '<td class="text-center">90</td>'; // Final
+                $tableRows .= '<td><input type="number" class="form-control text-end" name="quarter1_' . $subjectId . '"/></td>'; 
+                $tableRows .= '<td><input type="number" class="form-control text-end" name="quarter2_' . $subjectId . '"/></td>'; 
+                $tableRows .= '<td></td>';
                 $tableRows .= '</tr>';
             }
 
-            // Add the General Average row
-            $tableRows .= '<tr>';
-            $tableRows .= '<td class="text-end" colspan="3">General Average for the Semester</td>';
-            $tableRows .= '<td class="fw-bold text-center">96</td>';
-            $tableRows .= '</tr>';
+            // Include the "General Average" row for displaying final grades
+            $generalAverageRow = '<tr>';
+            $generalAverageRow .= '<td class="text-end" colspan="3">General Average for the Semester</td>';
+            $generalAverageRow .= '<td class="fw-bold text-center"></td>';
+            $generalAverageRow .= '</tr>';
 
             if ($semesterNumber == 1) {
-                $tableRowsSemester1 = $tableRows;
+                $tableRowsSemester1 = $tableRows . $generalAverageRow;
             } elseif ($semesterNumber == 2) {
-                $tableRowsSemester2 = $tableRows;
+                $tableRowsSemester2 = $tableRows . $generalAverageRow;
             }
         }
     }
@@ -267,4 +291,39 @@ if (isset($_POST['sectionId'])) {
 
     echo json_encode($response);
 }
+
+if (isset($_POST['saveGrade'])) {
+    // Decode the JSON data received
+    $grades = json_decode($_POST['grades'], true);
+
+    // Extract data from the decoded JSON
+    $studentId = $grades['studentId'];
+    $sectionId = $grades['sectionId'];
+    $semester1Data = $grades['semester1'];
+    $semester2Data = $grades['semester2'];
+
+    // Prepare the JSON data to be stored in the 'grades' column
+    $gradesData = json_encode([
+        'semester1' => $semester1Data,
+        'semester2' => $semester2Data
+    ]);
+
+    $data = [
+        'student_id' => $studentId,
+        'class_id' => $sectionId,
+        'grades' => $gradesData
+    ];
+
+    $result = insert('grades', $data);
+
+    if ($result) {
+        $response = array("success" => true, "message" => "Grades Save Successfully");
+    } else {
+        $response = array("success" => false, "message" => "Something went wrong");
+    }
+
+    echo json_encode($response);
+}
+
+
 

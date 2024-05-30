@@ -9,7 +9,7 @@
         </div>
         <div class="card-body">
             <?php alertMessage(); ?>
-            <form action="code.php" method="POST">
+            <form id="gradesForm">
                 <?php
                 $parmValue = checkParamId('id');
                 if (!is_numeric($parmValue)) {
@@ -17,7 +17,7 @@
                     return false;
                 }
 
-                $student = getById('students', $parmValue);
+                $student = getById('grades', $parmValue);
                 if ($student['status'] == 200) {
 
                 ?>
@@ -71,7 +71,7 @@
                         </div>
 
                         <div class="col-md-12 mb-3 text-end">
-                            <button type="submit" name="updateStudent" class="btn btn-primary">Update</button>
+                            <button type="submit" name="saveGrade" class="btn btn-primary">Save</button>
                         </div>
                     </div>
                 <?php
@@ -103,5 +103,71 @@
                 }
             });
         });
+
+        $('#gradesForm').on('submit', function(event) {
+            event.preventDefault(); // Prevents the default form submission behavior
+
+            // Function to check if a row represents the "General Average" row
+            function isGeneralAverageRow(row) {
+                return row.find('td:first').text() === 'General Average for the Semester';
+            }
+
+            // Function to extract data from table rows
+            function extractDataFromRows(tableId) {
+                var semesterData = [];
+                $('#' + tableId + ' tbody tr').each(function() {
+                    var row = $(this);
+                    if (!isGeneralAverageRow(row)) { // Exclude the "General Average" row
+                        var subjectName = row.find('td:first').text();
+                        var quarter1Grade = row.find('input[name^="quarter1_"]').val();
+                        var quarter2Grade = row.find('input[name^="quarter2_"]').val();
+
+                        var subjectData = {
+                            subject_name: subjectName
+                        };
+
+                        // Check if grades are defined and add them to the subject data
+                        if (quarter1Grade) {
+                            subjectData.quarter_1_grade = quarter1Grade;
+                        }
+                        if (quarter2Grade) {
+                            subjectData.quarter_2_grade = quarter2Grade;
+                        }
+
+                        semesterData.push(subjectData);
+                    }
+                });
+                return semesterData;
+            }
+
+            // Extract data from both semesters
+            var semester1Data = extractDataFromRows('semester1-table');
+            var semester2Data = extractDataFromRows('semester2-table');
+
+            // Construct the data object
+            var formData = {
+                sectionId: $('[name="section"]').val(),
+                studentId: $('[name="studentId"]').val(),
+                semester1: semester1Data,
+                semester2: semester2Data,
+            };
+
+            var grades = JSON.stringify(formData)
+
+            $.ajax({
+                url: 'code.php',
+                type: 'POST',
+                data: {
+                    saveGrade: true,
+                    grades: grades,
+                }, //
+                dataType: "json",
+                success: function(response) {
+
+                    console.log(response);
+                }
+            });
+        });
+
     });
 </script>
