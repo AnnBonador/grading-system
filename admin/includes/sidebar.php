@@ -1,5 +1,6 @@
 <?php
 $page = substr($_SERVER['SCRIPT_NAME'], strrpos($_SERVER['SCRIPT_NAME'], "/") + 1);
+$loggedInUserRole = $_SESSION['loggedInUser']['role']; // Assuming the role is stored in the session
 ?>
 
 <div id="layoutSidenav_nav">
@@ -11,6 +12,8 @@ $page = substr($_SERVER['SCRIPT_NAME'], strrpos($_SERVER['SCRIPT_NAME'], "/") + 
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Dashboard
                 </a>
+                
+                <?php if ($loggedInUserRole === 'Admin'): // Check if the user is an Admin ?>
                 <div class="sb-sidenav-menu-heading">Management</div>
                 <a class="nav-link 
                 <?= $page == 'subjects-create.php' ? 'collapse active' : 'collapsed'; ?>
@@ -47,7 +50,6 @@ $page = substr($_SERVER['SCRIPT_NAME'], strrpos($_SERVER['SCRIPT_NAME'], "/") + 
                         <a class="nav-link <?= $page == 'classes.php' ? 'active' : ''; ?>" href="classes.php">View Classes</a>
                     </nav>
                 </div>
-
                 
                 <div class="sb-sidenav-menu-heading">Manage Users</div>
 
@@ -106,14 +108,13 @@ $page = substr($_SERVER['SCRIPT_NAME'], strrpos($_SERVER['SCRIPT_NAME'], "/") + 
                         <a class="nav-link <?= $page == 'class-record.php' ? 'active' : ''; ?>" href="class-record.php">View Class Record</a>
                     </nav>
                 </div>
+                <?php endif; ?>
 
             </div>
-
-
         </div>
         <div class="sb-sidenav-footer">
             <div class="small">Logged in as:</div>
-            Start Bootstrap
+            <?= htmlspecialchars($_SESSION['loggedInUser']['username']) ?>
         </div>
     </nav>
 </div>

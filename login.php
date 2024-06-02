@@ -32,14 +32,6 @@ if(isset($_SESSION['loggedIn']))
                     <div class="container-login100-form-btn m-t-32">
                         <button type="submit" name="loginBtn" class="login100-form-btn">Login</button>
                     </div>
-                    <div class="container-login100-form-btn m-t-32">
-                        <p>Log in as <a href="../sign_in/subject-teacher.html">Teacher</a>
-                        </p>
-
-                        <p>
-                            Don't have an account yet? Sign up as<a href="../sign_up/admin.html"> Admin</a> or <a href="../sign_up/subject-teacher.html"> Teacher</a>
-
-                    </div>
                     </p>
                 </form>
             </div>

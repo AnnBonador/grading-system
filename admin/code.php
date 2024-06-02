@@ -284,9 +284,9 @@ if (isset($_POST['saveGrade'])) {
     $semester2Data = $grades['semester2'];
     $genAveFirst = $grades['semester1_final_average'];
     $genAveSecond = $grades['semester2_final_average'];
-    if (!isStudentIdUniqueForRecord('grades', $studentId,$recordId)) {
+    if (!isStudentIdUniqueForRecord('grades', $studentId, $recordId)) {
         $response = array("warning" => true, "message" => "Student Already Exists");
-    }else {
+    } else {
         $gradesData = json_encode([
             'semester1' => $semester1Data,
             'semester2' => $semester2Data
@@ -324,9 +324,9 @@ if (isset($_POST['updateGrade'])) {
     $semester2Data = $grades['semester2'];
     $genAveFirst = $grades['semester1_final_average'];
     $genAveSecond = $grades['semester2_final_average'];
-    if (!isStudentIdUniqueForRecord('grades', $studentId,$recordId,$gradeId)) {
+    if (!isStudentIdUniqueForRecord('grades', $studentId, $recordId, $gradeId)) {
         $response = array("warning" => true, "message" => "Student Already Exists");
-    }else {
+    } else {
         $gradesData = json_encode([
             'semester1' => $semester1Data,
             'semester2' => $semester2Data
@@ -340,7 +340,7 @@ if (isset($_POST['updateGrade'])) {
             'gen_avg_second' => $genAveSecond
         ];
 
-        $result = update('grades',$gradeId, $data);
+        $result = update('grades', $gradeId, $data);
 
         if ($result) {
             $response = array("success" => true, "message" => "Grades Updated Successfully");
@@ -351,3 +351,96 @@ if (isset($_POST['updateGrade'])) {
 
     echo json_encode($response);
 }
+
+if (isset($_POST['updatePerSub'])) {
+    // Check if all required form fields are present
+    if (isset($_POST['subject_id'], $_POST['semester'], $_POST['grades'], $_POST['record_ids'])) {
+        $subject_id = $_POST['subject_id'];
+        $semester = $_POST['semester'];
+        $grades = $_POST['grades'];
+        $record_ids = $_POST['record_ids']; // Use record_ids array to identify specific records
+
+        // Loop through record_ids and update grades
+        foreach ($record_ids as $record_id) {
+            // Get the existing grades JSON for this record_id
+            $query = "SELECT grades FROM grades WHERE id = $record_id";
+            $result = mysqli_query($conn, $query);
+
+            if ($result && mysqli_num_rows($result) > 0) {
+                $row = mysqli_fetch_assoc($result);
+                $existing_grades_json = $row['grades'];
+                mysqli_free_result($result);
+
+                // Decode the existing grades JSON
+                $existing_grades = json_decode($existing_grades_json, true);
+
+                // Update the quarter grades for the specific subject ID
+                $existing_grades['semester' . $semester] = array_map(function ($subject) use ($subject_id, $grades, $record_id) {
+                    if ($subject['subject_id'] == $subject_id) {
+                        $subject['quarter_1_grade'] = isset($grades[$record_id]['quarter_1']) ? $grades[$record_id]['quarter_1'] : '';
+                        $subject['quarter_2_grade'] = isset($grades[$record_id]['quarter_2']) ? $grades[$record_id]['quarter_2'] : '';
+                    }
+                    return $subject;
+                }, $existing_grades['semester' . $semester]);
+
+                // Encode the updated grades back to JSON
+                $updated_grades_json = json_encode($existing_grades);
+
+                // Update the grades in the database
+                $query = "UPDATE grades SET grades = '$updated_grades_json' WHERE id = $record_id";
+                $result = mysqli_query($conn, $query);
+
+                // Check if the update was successful
+                if ($result) {
+                    $response = array("success" => true, "message" => "Grades Updated Successfully");
+                } else {
+                    $response = array("warning" => false, "message" => "Something went wrong");
+                }
+            } else {
+                $response = array("warning" => false, "message" => "No grades found for record ID: $record_id");
+            }
+        }
+    }
+    echo json_encode($response);
+}
+
+if (isset($_POST['updateProfile'])) {
+    $sessionId = validate($_SESSION['loggedInUser']['user_id']);
+
+    $userData = getById('admins', $sessionId);
+    if ($userData['status'] != 200) {
+        redirect('update-profile.php', 'Please fill required fields.');
+    }
+
+    $name = validate($_POST['name']);
+    $email = validate($_POST['email']);
+    $password = validate($_POST['password']);
+
+    if ($password != '') {
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+    } else {
+        $hashedPassword = $userData['data']['password'];
+    }
+
+    if ($name != '' && $email != '') {
+        $data = [
+            'name' => $name,
+            'email' => $email,
+            'password' => $hashedPassword
+        ];
+
+        $result = update('admins', $sessionId, $data);
+        if ($result) {
+            // Update session variables with the new data
+            $_SESSION['loggedInUser']['name'] = $name;
+            $_SESSION['loggedInUser']['email'] = $email;
+
+            redirect('update-profile.php', 'Profile Updated Successfully');
+        } else {
+            redirect('update-profile.php', 'Something went wrong');
+        }
+    } else {
+        redirect('update-profile.php', 'Please fill required fields.');
+    }
+}
+

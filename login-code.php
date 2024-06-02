@@ -27,6 +27,7 @@ if(isset($_POST['loginBtn']))
                     'username' => $row['username'],
                     'name' => $row['name'],
                     'email' => $row['email'],
+                    'role' => $row['role'],
                 ];
 
                 redirect('admin/index.php','Logged In Successfully');
