@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 02, 2024 at 07:33 AM
+-- Generation Time: Jun 02, 2024 at 07:47 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -58,6 +58,13 @@ CREATE TABLE `classes` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `classes`
+--
+
+INSERT INTO `classes` (`id`, `name`, `academic_year`, `subjects`, `created_at`) VALUES
+(49, 'Colette Harmon', '2024-2025', '[{\"semester\":1,\"subjects\":[{\"subject_id\":\"9\",\"teacher_id\":\"\"},{\"subject_id\":\"19\",\"teacher_id\":\"\"}]},{\"semester\":2,\"subjects\":[{\"subject_id\":\"11\",\"teacher_id\":\"\"},{\"subject_id\":\"17\",\"teacher_id\":\"\"}]}]', '2024-06-02 05:35:53');
+
 -- --------------------------------------------------------
 
 --
@@ -71,6 +78,13 @@ CREATE TABLE `class_record` (
   `adviser` varchar(191) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `class_record`
+--
+
+INSERT INTO `class_record` (`id`, `name`, `class_id`, `adviser`, `created_at`) VALUES
+(16, 'Stewart Sanchez', 49, '', '2024-06-02 05:36:02');
 
 -- --------------------------------------------------------
 
@@ -87,16 +101,6 @@ CREATE TABLE `grades` (
   `gen_avg_second` varchar(191) DEFAULT NULL,
   `created_at` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `grades`
---
-
-INSERT INTO `grades` (`id`, `student_id`, `record_id`, `grades`, `gen_avg_first`, `gen_avg_second`, `created_at`) VALUES
-(34, 10, 12, '{\"semester1\":[{\"subject_id\":\"9\",\"quarter_1_grade\":\"88\",\"quarter_2_grade\":\"75\",\"final_grade\":\"81.50\"},{\"subject_id\":\"3\",\"quarter_1_grade\":\"38\",\"quarter_2_grade\":\"69\",\"final_grade\":\"53.50\"},{\"subject_id\":\"10\",\"quarter_1_grade\":\"33\",\"quarter_2_grade\":\"90\",\"final_grade\":\"61.50\"},{\"subject_id\":\"13\",\"quarter_1_grade\":\"51\",\"quarter_2_grade\":\"91\",\"final_grade\":\"71.00\"},{\"subject_id\":\"11\",\"quarter_1_grade\":\"41\",\"quarter_2_grade\":\"61\",\"final_grade\":\"51.00\"}],\"semester2\":[{\"subject_id\":\"14\",\"quarter_1_grade\":\"31\",\"quarter_2_grade\":\"8\",\"final_grade\":\"19.50\"},{\"subject_id\":\"15\",\"quarter_1_grade\":\"34\",\"quarter_2_grade\":\"89\",\"final_grade\":\"61.50\"},{\"subject_id\":\"16\",\"quarter_1_grade\":\"44\",\"quarter_2_grade\":\"74\",\"final_grade\":\"59.00\"},{\"subject_id\":\"17\",\"quarter_1_grade\":\"74\",\"quarter_2_grade\":\"21\",\"final_grade\":\"47.50\"},{\"subject_id\":\"18\",\"quarter_1_grade\":\"22\",\"quarter_2_grade\":\"79\",\"final_grade\":\"50.50\"},{\"subject_id\":\"19\",\"quarter_1_grade\":\"90\",\"quarter_2_grade\":\"98\",\"final_grade\":\"94.00\"}]}', '63.70', '55.33', '2024-06-02'),
-(35, 8, 13, '{\"semester1\":[{\"subject_id\":\"9\",\"quarter_1_grade\":\"90\",\"quarter_2_grade\":\"98\",\"final_grade\":\"94.00\"},{\"subject_id\":\"3\",\"quarter_1_grade\":\"90\",\"quarter_2_grade\":\"25\",\"final_grade\":\"57.50\"},{\"subject_id\":\"10\",\"quarter_1_grade\":\"22\",\"quarter_2_grade\":\"17\",\"final_grade\":\"19.50\"},{\"subject_id\":\"13\",\"quarter_1_grade\":\"99\",\"quarter_2_grade\":\"71\",\"final_grade\":\"85.00\"},{\"subject_id\":\"11\",\"quarter_1_grade\":\"22\",\"quarter_2_grade\":\"81\",\"final_grade\":\"51.50\"}],\"semester2\":[{\"subject_id\":\"14\",\"quarter_1_grade\":\"60\",\"quarter_2_grade\":\"100\",\"final_grade\":\"80.00\"},{\"subject_id\":\"15\",\"quarter_1_grade\":\"3\",\"quarter_2_grade\":\"22\",\"final_grade\":\"12.50\"},{\"subject_id\":\"16\",\"quarter_1_grade\":\"8\",\"quarter_2_grade\":\"13\",\"final_grade\":\"10.50\"},{\"subject_id\":\"17\",\"quarter_1_grade\":\"61\",\"quarter_2_grade\":\"37\",\"final_grade\":\"49.00\"},{\"subject_id\":\"18\",\"quarter_1_grade\":\"93\",\"quarter_2_grade\":\"93\",\"final_grade\":\"93.00\"},{\"subject_id\":\"19\",\"quarter_1_grade\":\"2\",\"quarter_2_grade\":\"13\",\"final_grade\":\"7.50\"}]}', '61.50', '42.08', '2024-06-02'),
-(36, 5, 14, '{\"semester1\":[{\"subject_id\":\"3\",\"quarter_1_grade\":\"95\",\"quarter_2_grade\":\"55\",\"final_grade\":\"75.00\"},{\"subject_id\":\"12\",\"quarter_1_grade\":\"91\",\"quarter_2_grade\":\"79\",\"final_grade\":\"85.00\"},{\"subject_id\":\"18\",\"quarter_1_grade\":\"34\",\"quarter_2_grade\":\"41\",\"final_grade\":\"37.50\"}],\"semester2\":[{\"subject_id\":\"10\",\"quarter_1_grade\":\"23\",\"quarter_2_grade\":\"67\",\"final_grade\":\"45.00\"},{\"subject_id\":\"17\",\"quarter_1_grade\":\"51\",\"quarter_2_grade\":\"69\",\"final_grade\":\"60.00\"}]}', '65.83', '52.50', '2024-06-02'),
-(37, 12, 15, '{\"semester1\":[{\"subject_id\":\"10\",\"quarter_1_grade\":\"29\",\"quarter_2_grade\":\"4\",\"final_grade\":\"16.50\"},{\"subject_id\":\"17\",\"quarter_1_grade\":\"59\",\"quarter_2_grade\":\"61\",\"final_grade\":\"60.00\"},{\"subject_id\":\"11\",\"quarter_1_grade\":\"41\",\"quarter_2_grade\":\"71\",\"final_grade\":\"56.00\"}],\"semester2\":[{\"subject_id\":\"3\",\"quarter_1_grade\":\"39\",\"quarter_2_grade\":\"33\",\"final_grade\":\"36.00\"},{\"subject_id\":\"9\",\"quarter_1_grade\":\"44\",\"quarter_2_grade\":\"27\",\"final_grade\":\"35.50\"}]}', '44.17', '35.75', '2024-06-02');
 
 -- --------------------------------------------------------
 
@@ -165,13 +169,15 @@ ALTER TABLE `classes`
 -- Indexes for table `class_record`
 --
 ALTER TABLE `class_record`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `class_id_foreign` (`class_id`);
 
 --
 -- Indexes for table `grades`
 --
 ALTER TABLE `grades`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `student_id_foreign` (`student_id`);
 
 --
 -- Indexes for table `students`
@@ -199,31 +205,47 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT for table `classes`
 --
 ALTER TABLE `classes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `class_record`
 --
 ALTER TABLE `class_record`
-  MODIFY `id` int(111) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(111) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `grades`
 --
 ALTER TABLE `grades`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `subjects`
 --
 ALTER TABLE `subjects`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `class_record`
+--
+ALTER TABLE `class_record`
+  ADD CONSTRAINT `class_id_foreign` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `grades`
+--
+ALTER TABLE `grades`
+  ADD CONSTRAINT `student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
