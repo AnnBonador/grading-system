@@ -18,10 +18,10 @@
                     echo '<h5>' . $parmValue . '</h5>';
                     return false;
                 }
-                
+
                 $record = getById('class_record', $_GET['class-id']);
                 $class_id = $record['data']['class_id'];
-                
+
                 $grades = getById('grades', $parmValue);
                 if ($grades['status'] == 200) {
                     $tableRows = retrieveTable($class_id, $grades['data']['grades']);
@@ -30,8 +30,8 @@
                 ?>
 
                     <div class="row">
-                        <input type="hidden" id="record_id" value="<?= $grades['data']['record_id']?>">
-                        <input type="hidden" id="grade_id" value="<?= $parmValue?>">
+                        <input type="hidden" id="record_id" value="<?= $grades['data']['record_id'] ?>">
+                        <input type="hidden" id="grade_id" value="<?= $parmValue ?>">
                         <div class="col-md-12 mb-3">
                             <label for="">Student *</label>
                             <select name="student" class="form-control select2" style="width: 100%;" required>
@@ -66,7 +66,7 @@
                                     <?php echo $tableRowsSemester1; ?>
                                     <tr class="fw-bold">
                                         <td class="text-end" colspan="3">General Average for the Semester</td>
-                                        <td id="semester1-general-average"><?=$grades['data']['gen_avg_first']?></td>
+                                        <td id="semester1-general-average"><?= $grades['data']['gen_avg_first'] ?></td>
                                     </tr>
 
                                 </tbody>
@@ -86,18 +86,19 @@
                                     <?php echo $tableRowsSemester2; ?>
                                     <tr class="fw-bold">
                                         <td class="text-end" colspan="3">General Average for the Semester</td>
-                                        <td id="semester2-general-average"><?=$grades['data']['gen_avg_second']?></td>
+                                        <td id="semester2-general-average"><?= $grades['data']['gen_avg_second'] ?></td>
                                     </tr>
 
                                 </tbody>
                             </table>
                         </div>
 
-                        <div class="col-md-12 mb-3 text-end">
-                            <button type="submit" name="updateGrade" class="btn btn-primary">Update</button>
+                        <div class="col-md-12 mb-3">
+                            <a href="grades-print.php?id=<?= $_GET['id']; ?>" class="btn btn-success">Print</a>
+                            <button type="submit" name="updateGrade" class="btn btn-primary float-end">Update</button>
                         </div>
                     </div>
-                    <?php
+                <?php
                 } else {
                     echo '<h5>' . $grades['message'] . '</h5>';
                 }
