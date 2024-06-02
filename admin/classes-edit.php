@@ -33,10 +33,19 @@
                             <label for="">Academic Year *</label>
                             <select name="academic_year" class="form-control select2" required>
                                 <option value="">-- Select --</option>
-                                <option value="2023-2024" <?= $classData['academic_year'] == '2023-2024' ? 'selected' : ''; ?>>2023-2024</option>
-                                <option value="2024-2025" <?= $classData['academic_year'] == '2024-2025' ? 'selected' : ''; ?>>2024-2025</option>
+                                <?php
+                                $current_year = date('Y');
+                                for ($i = -1; $i < 3; $i++) {
+                                    $start_year = $current_year + $i;
+                                    $end_year = $start_year + 1;
+                                    $academic_year = $start_year . '-' . $end_year;
+                                    $selected = ($classData['academic_year'] == $academic_year) ? 'selected' : '';
+                                    echo "<option value=\"$academic_year\" $selected>$academic_year</option>";
+                                }
+                                ?>
                             </select>
                         </div>
+
                     </div>
                     <div class="row">
                         <div class="col-md-12 mb-4">
@@ -56,18 +65,25 @@
                                                 <tr>
                                                     <td>
                                                         <select name="subjects[first_semester][]" class="form-control select2" style="width: 100%;" required>
+                                                        <option value="" disabled>-- Select --</option>
                                                             <?php
                                                             $subjects = getAll('subjects');
                                                             if ($subjects && mysqli_num_rows($subjects) > 0) {
                                                                 while ($subj = mysqli_fetch_assoc($subjects)) {
                                                                     $selected = $subj['id'] == $subject['subject_id'] ? 'selected' : '';
-                                                                    echo '<option value="' . $subj['id'] . '" ' . $selected . '>' . $subj['name'] . '</option>';
+                                                                    echo '<option value="' . $subj['id'] . '" ' . $selected . '>';
+                                                                    if ($subj['subject_code']) {
+                                                                        echo '<b>' . $subj['subject_code'] . '</b> | ';
+                                                                    }
+                                                                    echo $subj['name'];
+                                                                    echo '</option>';
                                                                 }
                                                             } else {
                                                                 echo '<option value="">No subjects available</option>';
                                                             }
                                                             ?>
                                                         </select>
+
                                                     </td>
                                                     <td>
                                                         <select name="teachers[first_semester][]" class="form-control select2" style="width: 100%;">
@@ -118,17 +134,23 @@
                                                             if ($subjects && mysqli_num_rows($subjects) > 0) {
                                                                 while ($subj = mysqli_fetch_assoc($subjects)) {
                                                                     $selected = $subj['id'] == $subject['subject_id'] ? 'selected' : '';
-                                                                    echo '<option value="' . $subj['id'] . '" ' . $selected . '>' . $subj['name'] . '</option>';
+                                                                    echo '<option value="' . $subj['id'] . '" ' . $selected . '>';
+                                                                    if ($subj['subject_code']) {
+                                                                        echo '<b>' . $subj['subject_code'] . '</b> | ';
+                                                                    }
+                                                                    echo $subj['name'];
+                                                                    echo '</option>';
                                                                 }
                                                             } else {
                                                                 echo '<option value="">No subjects available</option>';
                                                             }
                                                             ?>
                                                         </select>
+
                                                     </td>
                                                     <td>
                                                         <select name="teachers[second_semester][]" class="form-control select2" style="width: 100%;">
-                                                        <option value="" <?= $subject['teacher_id'] === null ? 'selected' : ''; ?> disabled>-- Select --</option>
+                                                            <option value="" <?= $subject['teacher_id'] === null ? 'selected' : ''; ?> disabled>-- Select --</option>
                                                             <?php
                                                             $teachers = getTeachers('admins');
                                                             if ($teachers && mysqli_num_rows($teachers) > 0) {
@@ -175,22 +197,28 @@
 <script src="assets/js/classes/index.js"></script>
 <script>
     function addRow(tableBody, semester) {
-    var newRow = `
+        var newRow = `
     <tr>
         <td>
-            <select name="subjects[${semester}][]" class="form-control select2" style="width: 100%;" required>
-                <option value="" selected disabled>-- Select --</option>
-                <?php
-                $subjects = getAll('subjects');
-                if ($subjects && mysqli_num_rows($subjects) > 0) {
-                    while ($subject = mysqli_fetch_assoc($subjects)) {
-                        echo '<option value="' . $subject['id'] . '">' . $subject['name'] . '</option>';
-                    }
-                } else {
-                    echo '<option value="">No subjects available</option>';
-                }
-                ?>
-            </select>
+        <select name="subjects[${semester}][]" class="form-control select2" style="width: 100%;" required>
+    <option value="" selected disabled>-- Select --</option>
+    <?php
+    $subjects = getAll('subjects');
+    if ($subjects && mysqli_num_rows($subjects) > 0) {
+        while ($subject = mysqli_fetch_assoc($subjects)) {
+            echo '<option value="' . $subject['id'] . '">';
+            if ($subject['subject_code']) {
+                echo '<b>' . $subject['subject_code'] . '</b> | ';
+            }
+            echo $subject['name'];
+            echo '</option>';
+        }
+    } else {
+        echo '<option value="">No subjects available</option>';
+    }
+    ?>
+</select>
+
         </td>
         <td>
             <select name="teachers[${semester}][]" class="form-control select2" style="width: 100%;">
@@ -212,10 +240,7 @@
         </td>
     </tr>
 `;
-    $(tableBody).append(newRow);
-    initializeSelect2WithClose(".select2"); // Re-initialize Select2 for new rows with close button
-}
+        $(tableBody).append(newRow);
+        initializeSelect2WithClose(".select2");
+    }
 </script>
-
-
-

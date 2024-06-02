@@ -37,7 +37,6 @@ if (isset($_POST['saveAdmin'])) {
     }
 }
 
-
 if (isset($_POST['updateAdmin'])) {
     $adminId = validate($_POST['adminId']);
 
@@ -80,7 +79,6 @@ if (isset($_POST['updateAdmin'])) {
 if (isset($_POST['saveSubject'])) {
     $name = validate($_POST['name']);
     $subject_code = validate($_POST['subject_code']);
-    $status = isset($_POST['status']) ? 1 : 0;
     $subject_type = validate($_POST['subject_type']);
 
     if (!isNameUnique('subjects', $name)) {
@@ -90,7 +88,6 @@ if (isset($_POST['saveSubject'])) {
             'name' => $name,
             'subject_code' => $subject_code,
             'subject_type' => $subject_type,
-            'status' => $status
         ];
         $result = insert('subjects', $data);
         if ($result) {
@@ -105,7 +102,6 @@ if (isset($_POST['updateSubject'])) {
     $subjectId = validate($_POST['subjectId']);
     $name = validate($_POST['name']);
     $subject_code = validate($_POST['subject_code']);
-    $status = isset($_POST['status']) ? 1 : 0;
     $subject_type = validate($_POST['subject_type']);
 
     if (!isNameUnique('subjects', $name, $subjectId)) {
@@ -115,7 +111,6 @@ if (isset($_POST['updateSubject'])) {
             'name' => $name,
             'subject_code' => $subject_code,
             'subject_type' => $subject_type,
-            'status' => $status
         ];
         $result = update('subjects', $subjectId, $data);
         if ($result) {
@@ -131,7 +126,6 @@ if (isset($_POST['saveStudent'])) {
     $birthday = validate($_POST['birthday']);
     $gender = validate($_POST['gender']);
     $lrn = validate($_POST['lrn']);
-    $status = isset($_POST['status']) ? 1 : 0;
 
     if (!isNameUnique('students', $name)) {
         redirect('students-create.php', 'Student name already exists');
@@ -141,7 +135,6 @@ if (isset($_POST['saveStudent'])) {
             'age' => $birthday,
             'gender' => $gender,
             'lrn' => $lrn,
-            'status' => $status
         ];
         $result = insert('students', $data);
         if ($result) {
@@ -158,7 +151,6 @@ if (isset($_POST['updateStudent'])) {
     $birthday = validate($_POST['birthday']);
     $gender = validate($_POST['gender']);
     $lrn = validate($_POST['lrn']);
-    $status = isset($_POST['status']) ? 1 : 0;
 
     if (!isNameUnique('students', $name, $studentId)) {
         redirect('students-edit.php?id=' . $studentId, 'Student name already exists');
@@ -168,7 +160,6 @@ if (isset($_POST['updateStudent'])) {
             'age' => $birthday,
             'gender' => $gender,
             'lrn' => $lrn,
-            'status' => $status
         ];
         $result = update('students', $studentId, $data);
         if ($result) {
@@ -236,60 +227,50 @@ if (isset($_POST['updateClass'])) {
     echo json_encode($response);
 }
 
+if (isset($_POST['saveClassRecord'])) {
+    $name = validate($_POST['name']);
+    $class = validate($_POST['class']);
+    $adviser = validate($_POST['adviser']);
 
-if (isset($_POST['sectionId'])) {
-    $sectionId = $_POST['sectionId'];
-
-    $query = "SELECT * FROM classes WHERE id='$sectionId'";
-    $result = mysqli_query($conn, $query);
-
-    $tableRowsSemester1 = '';
-    $tableRowsSemester2 = '';
-
-    if (mysqli_num_rows($result) > 0) {
-        $classData = mysqli_fetch_assoc($result);
-        $subjectsData = json_decode($classData['subjects'], true);
-
-        foreach ($subjectsData as $semester) {
-            $semesterNumber = $semester['semester'];
-            $tableRows = '';
-
-            foreach ($semester['subjects'] as $subject) {
-                $subjectId = $subject['subject_id'];
-
-                $subjectQuery = "SELECT name FROM subjects WHERE id='$subjectId'";
-                $subjectResult = mysqli_query($conn, $subjectQuery);
-                $subjectRow = mysqli_fetch_assoc($subjectResult);
-                $subjectName = $subjectRow['name'];
-
-                $tableRows .= '<tr>';
-                $tableRows .= '<td>' . $subjectName . '</td>';
-                $tableRows .= '<td><input type="number" class="form-control text-end" name="quarter1_' . $subjectId . '"/></td>'; 
-                $tableRows .= '<td><input type="number" class="form-control text-end" name="quarter2_' . $subjectId . '"/></td>'; 
-                $tableRows .= '<td></td>';
-                $tableRows .= '</tr>';
-            }
-
-            // Include the "General Average" row for displaying final grades
-            $generalAverageRow = '<tr>';
-            $generalAverageRow .= '<td class="text-end" colspan="3">General Average for the Semester</td>';
-            $generalAverageRow .= '<td class="fw-bold text-center"></td>';
-            $generalAverageRow .= '</tr>';
-
-            if ($semesterNumber == 1) {
-                $tableRowsSemester1 = $tableRows . $generalAverageRow;
-            } elseif ($semesterNumber == 2) {
-                $tableRowsSemester2 = $tableRows . $generalAverageRow;
-            }
+    if (!isNameUnique('class_record', $name)) {
+        redirect('class-record-create.php', 'Class Record name already exists');
+    } else {
+        $data = [
+            'name' => $name,
+            'class_id' => $class,
+            'adviser' => $adviser,
+        ];
+        $result = insert('class_record', $data);
+        if ($result) {
+            redirect('class-record-create.php', 'Class Record Created Successfully');
+        } else {
+            redirect('class-record-create.php', 'Something went wrong');
         }
     }
+}
 
-    $response = array(
-        'semester1' => $tableRowsSemester1,
-        'semester2' => $tableRowsSemester2
-    );
+if (isset($_POST['updateClassRecord'])) {
+    $recordId = $_POST['recordId'];
 
-    echo json_encode($response);
+    $name = validate($_POST['name']);
+    $class = validate($_POST['class']);
+    $adviser = validate($_POST['adviser']);
+
+    if (!isNameUnique('class_record', $name, $recordId)) {
+        redirect('class-record-edit.php?id=' . $recordId, 'Class Record name already exists');
+    } else {
+        $data = [
+            'name' => $name,
+            'class_id' => $class,
+            'adviser' => $adviser,
+        ];
+        $result = update('class_record', $recordId, $data);
+        if ($result) {
+            redirect('class-record-edit.php?id=' . $recordId, 'Class Record Updated Successfully');
+        } else {
+            redirect('class-record-edit.php?id=' . $recordId, 'Something went wrong');
+        }
+    }
 }
 
 if (isset($_POST['saveGrade'])) {
@@ -298,32 +279,75 @@ if (isset($_POST['saveGrade'])) {
 
     // Extract data from the decoded JSON
     $studentId = $grades['studentId'];
-    $sectionId = $grades['sectionId'];
+    $recordId = $grades['recordId'];
     $semester1Data = $grades['semester1'];
     $semester2Data = $grades['semester2'];
+    $genAveFirst = $grades['semester1_final_average'];
+    $genAveSecond = $grades['semester2_final_average'];
+    if (!isStudentIdUniqueForRecord('grades', $studentId,$recordId)) {
+        $response = array("warning" => true, "message" => "Student Already Exists");
+    }else {
+        $gradesData = json_encode([
+            'semester1' => $semester1Data,
+            'semester2' => $semester2Data
+        ]);
 
-    // Prepare the JSON data to be stored in the 'grades' column
-    $gradesData = json_encode([
-        'semester1' => $semester1Data,
-        'semester2' => $semester2Data
-    ]);
+        $data = [
+            'student_id' => $studentId,
+            'record_id' => $recordId,
+            'grades' => $gradesData,
+            'gen_avg_first' => $genAveFirst,
+            'gen_avg_second' => $genAveSecond
+        ];
 
-    $data = [
-        'student_id' => $studentId,
-        'class_id' => $sectionId,
-        'grades' => $gradesData
-    ];
+        $result = insert('grades', $data);
 
-    $result = insert('grades', $data);
-
-    if ($result) {
-        $response = array("success" => true, "message" => "Grades Save Successfully");
-    } else {
-        $response = array("success" => false, "message" => "Something went wrong");
+        if ($result) {
+            $response = array("success" => true, "message" => "Grades Save Successfully");
+        } else {
+            $response = array("success" => false, "message" => "Something went wrong");
+        }
     }
 
     echo json_encode($response);
 }
 
+if (isset($_POST['updateGrade'])) {
 
+    $grades = json_decode($_POST['grades'], true);
 
+    $gradeId = $grades['gradeId'];
+
+    $studentId = $grades['studentId'];
+    $recordId = $grades['recordId'];
+    $semester1Data = $grades['semester1'];
+    $semester2Data = $grades['semester2'];
+    $genAveFirst = $grades['semester1_final_average'];
+    $genAveSecond = $grades['semester2_final_average'];
+    if (!isStudentIdUniqueForRecord('grades', $studentId,$recordId,$gradeId)) {
+        $response = array("warning" => true, "message" => "Student Already Exists");
+    }else {
+        $gradesData = json_encode([
+            'semester1' => $semester1Data,
+            'semester2' => $semester2Data
+        ]);
+
+        $data = [
+            'student_id' => $studentId,
+            'record_id' => $recordId,
+            'grades' => $gradesData,
+            'gen_avg_first' => $genAveFirst,
+            'gen_avg_second' => $genAveSecond
+        ];
+
+        $result = update('grades',$gradeId, $data);
+
+        if ($result) {
+            $response = array("success" => true, "message" => "Grades Updated Successfully");
+        } else {
+            $response = array("success" => false, "message" => "Something went wrong");
+        }
+    }
+
+    echo json_encode($response);
+}

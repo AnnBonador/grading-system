@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 30, 2024 at 07:08 PM
+-- Generation Time: Jun 02, 2024 at 07:33 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -42,8 +42,7 @@ CREATE TABLE `admins` (
 --
 
 INSERT INTO `admins` (`id`, `username`, `name`, `email`, `role`, `password`, `created_at`) VALUES
-(1, 'admin', 'admin', 'xufajo@mail', 'Admin', '$2y$10$UQL7aVLsrcNuysp5DAC4.uvzuli0yPOcARQ8IMN1FekXx1QSMw1UK', '2024-05-18'),
-(2, 'rose', 'Rose Ann Bonador', 'roseannbonador5@gmail.com', 'Teacher', '$2y$10$eCveYlddHgnstjveBU/L2ec3DCeSaYJcqWdhHofUNP6.q3QlA0thq', '2024-05-18');
+(1, 'admin', 'admin', 'admin@gmail.com', 'Admin', '$2y$10$UQL7aVLsrcNuysp5DAC4.uvzuli0yPOcARQ8IMN1FekXx1QSMw1UK', '2024-05-18');
 
 -- --------------------------------------------------------
 
@@ -55,17 +54,23 @@ CREATE TABLE `classes` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `academic_year` varchar(255) NOT NULL,
-  `subjects` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`subjects`))
+  `subjects` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`subjects`)),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `classes`
+-- Table structure for table `class_record`
 --
 
-INSERT INTO `classes` (`id`, `name`, `academic_year`, `subjects`) VALUES
-(35, 'STEM 12A1', '2023-2024', '[{\"semester\":1,\"subjects\":[{\"subject_id\":\"9\",\"teacher_id\":\"2\"},{\"subject_id\":\"13\",\"teacher_id\":null},{\"subject_id\":\"13\",\"teacher_id\":null}]},{\"semester\":2,\"subjects\":[{\"subject_id\":\"13\",\"teacher_id\":null},{\"subject_id\":\"3\",\"teacher_id\":\"2\"}]}]'),
-(36, 'STEM 12A2', '2023-2024', '[{\"semester\":1,\"subjects\":[{\"subject_id\":\"3\",\"teacher_id\":\"2\"}]},{\"semester\":2,\"subjects\":[{\"subject_id\":\"3\",\"teacher_id\":\"2\"}]}]'),
-(37, 'STEM 12B1', '2023-2024', '[{\"semester\":1,\"subjects\":[{\"subject_id\":\"9\",\"teacher_id\":null},{\"subject_id\":\"3\",\"teacher_id\":null},{\"subject_id\":\"10\",\"teacher_id\":null},{\"subject_id\":\"13\",\"teacher_id\":null},{\"subject_id\":\"11\",\"teacher_id\":null}]},{\"semester\":2,\"subjects\":[{\"subject_id\":\"14\",\"teacher_id\":null},{\"subject_id\":\"15\",\"teacher_id\":null},{\"subject_id\":\"16\",\"teacher_id\":null},{\"subject_id\":\"17\",\"teacher_id\":null},{\"subject_id\":\"18\",\"teacher_id\":null},{\"subject_id\":\"19\",\"teacher_id\":null}]}]');
+CREATE TABLE `class_record` (
+  `id` int(111) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `class_id` int(11) NOT NULL,
+  `adviser` varchar(191) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -76,8 +81,10 @@ INSERT INTO `classes` (`id`, `name`, `academic_year`, `subjects`) VALUES
 CREATE TABLE `grades` (
   `id` int(11) NOT NULL,
   `student_id` int(11) NOT NULL,
-  `class_id` int(11) NOT NULL,
+  `record_id` int(11) NOT NULL,
   `grades` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`grades`)),
+  `gen_avg_first` varchar(191) DEFAULT NULL,
+  `gen_avg_second` varchar(191) DEFAULT NULL,
   `created_at` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -85,8 +92,11 @@ CREATE TABLE `grades` (
 -- Dumping data for table `grades`
 --
 
-INSERT INTO `grades` (`id`, `student_id`, `class_id`, `grades`, `created_at`) VALUES
-(2, 9, 37, '{\"semester1\":[{\"subject_name\":\"Pagbasa at Pagsusuri ng Ibat Ibang Teskto Tungo sa Pananaliksik\",\"quarter_1_grade\":\"90\",\"quarter_2_grade\":\"82\"},{\"subject_name\":\"Personal Development\",\"quarter_1_grade\":\"95\",\"quarter_2_grade\":\"87\"},{\"subject_name\":\"Physical Education and Health 3\",\"quarter_1_grade\":\"96\",\"quarter_2_grade\":\"98\"},{\"subject_name\":\"English for Academic and Professional Purposes\",\"quarter_1_grade\":\"95\",\"quarter_2_grade\":\"94\"},{\"subject_name\":\"Practical Research 2\",\"quarter_1_grade\":\"82\",\"quarter_2_grade\":\"90\"}],\"semester2\":[{\"subject_name\":\"Contemporary Philippine Arts from the Regions\",\"quarter_1_grade\":\"98\",\"quarter_2_grade\":\"95\"},{\"subject_name\":\"Physical Education and Health 4\",\"quarter_1_grade\":\"88\",\"quarter_2_grade\":\"90\"},{\"subject_name\":\"Empowerment Technologies\",\"quarter_1_grade\":\"85\",\"quarter_2_grade\":\"87\"},{\"subject_name\":\"Entrepreneurship\",\"quarter_1_grade\":\"90\",\"quarter_2_grade\":\"91\"},{\"subject_name\":\"General Physics 2\",\"quarter_1_grade\":\"92\",\"quarter_2_grade\":\"94\"},{\"subject_name\":\"General Chemistry 2\",\"quarter_1_grade\":\"90\",\"quarter_2_grade\":\"88\"}]}', '2024-05-30');
+INSERT INTO `grades` (`id`, `student_id`, `record_id`, `grades`, `gen_avg_first`, `gen_avg_second`, `created_at`) VALUES
+(34, 10, 12, '{\"semester1\":[{\"subject_id\":\"9\",\"quarter_1_grade\":\"88\",\"quarter_2_grade\":\"75\",\"final_grade\":\"81.50\"},{\"subject_id\":\"3\",\"quarter_1_grade\":\"38\",\"quarter_2_grade\":\"69\",\"final_grade\":\"53.50\"},{\"subject_id\":\"10\",\"quarter_1_grade\":\"33\",\"quarter_2_grade\":\"90\",\"final_grade\":\"61.50\"},{\"subject_id\":\"13\",\"quarter_1_grade\":\"51\",\"quarter_2_grade\":\"91\",\"final_grade\":\"71.00\"},{\"subject_id\":\"11\",\"quarter_1_grade\":\"41\",\"quarter_2_grade\":\"61\",\"final_grade\":\"51.00\"}],\"semester2\":[{\"subject_id\":\"14\",\"quarter_1_grade\":\"31\",\"quarter_2_grade\":\"8\",\"final_grade\":\"19.50\"},{\"subject_id\":\"15\",\"quarter_1_grade\":\"34\",\"quarter_2_grade\":\"89\",\"final_grade\":\"61.50\"},{\"subject_id\":\"16\",\"quarter_1_grade\":\"44\",\"quarter_2_grade\":\"74\",\"final_grade\":\"59.00\"},{\"subject_id\":\"17\",\"quarter_1_grade\":\"74\",\"quarter_2_grade\":\"21\",\"final_grade\":\"47.50\"},{\"subject_id\":\"18\",\"quarter_1_grade\":\"22\",\"quarter_2_grade\":\"79\",\"final_grade\":\"50.50\"},{\"subject_id\":\"19\",\"quarter_1_grade\":\"90\",\"quarter_2_grade\":\"98\",\"final_grade\":\"94.00\"}]}', '63.70', '55.33', '2024-06-02'),
+(35, 8, 13, '{\"semester1\":[{\"subject_id\":\"9\",\"quarter_1_grade\":\"90\",\"quarter_2_grade\":\"98\",\"final_grade\":\"94.00\"},{\"subject_id\":\"3\",\"quarter_1_grade\":\"90\",\"quarter_2_grade\":\"25\",\"final_grade\":\"57.50\"},{\"subject_id\":\"10\",\"quarter_1_grade\":\"22\",\"quarter_2_grade\":\"17\",\"final_grade\":\"19.50\"},{\"subject_id\":\"13\",\"quarter_1_grade\":\"99\",\"quarter_2_grade\":\"71\",\"final_grade\":\"85.00\"},{\"subject_id\":\"11\",\"quarter_1_grade\":\"22\",\"quarter_2_grade\":\"81\",\"final_grade\":\"51.50\"}],\"semester2\":[{\"subject_id\":\"14\",\"quarter_1_grade\":\"60\",\"quarter_2_grade\":\"100\",\"final_grade\":\"80.00\"},{\"subject_id\":\"15\",\"quarter_1_grade\":\"3\",\"quarter_2_grade\":\"22\",\"final_grade\":\"12.50\"},{\"subject_id\":\"16\",\"quarter_1_grade\":\"8\",\"quarter_2_grade\":\"13\",\"final_grade\":\"10.50\"},{\"subject_id\":\"17\",\"quarter_1_grade\":\"61\",\"quarter_2_grade\":\"37\",\"final_grade\":\"49.00\"},{\"subject_id\":\"18\",\"quarter_1_grade\":\"93\",\"quarter_2_grade\":\"93\",\"final_grade\":\"93.00\"},{\"subject_id\":\"19\",\"quarter_1_grade\":\"2\",\"quarter_2_grade\":\"13\",\"final_grade\":\"7.50\"}]}', '61.50', '42.08', '2024-06-02'),
+(36, 5, 14, '{\"semester1\":[{\"subject_id\":\"3\",\"quarter_1_grade\":\"95\",\"quarter_2_grade\":\"55\",\"final_grade\":\"75.00\"},{\"subject_id\":\"12\",\"quarter_1_grade\":\"91\",\"quarter_2_grade\":\"79\",\"final_grade\":\"85.00\"},{\"subject_id\":\"18\",\"quarter_1_grade\":\"34\",\"quarter_2_grade\":\"41\",\"final_grade\":\"37.50\"}],\"semester2\":[{\"subject_id\":\"10\",\"quarter_1_grade\":\"23\",\"quarter_2_grade\":\"67\",\"final_grade\":\"45.00\"},{\"subject_id\":\"17\",\"quarter_1_grade\":\"51\",\"quarter_2_grade\":\"69\",\"final_grade\":\"60.00\"}]}', '65.83', '52.50', '2024-06-02'),
+(37, 12, 15, '{\"semester1\":[{\"subject_id\":\"10\",\"quarter_1_grade\":\"29\",\"quarter_2_grade\":\"4\",\"final_grade\":\"16.50\"},{\"subject_id\":\"17\",\"quarter_1_grade\":\"59\",\"quarter_2_grade\":\"61\",\"final_grade\":\"60.00\"},{\"subject_id\":\"11\",\"quarter_1_grade\":\"41\",\"quarter_2_grade\":\"71\",\"final_grade\":\"56.00\"}],\"semester2\":[{\"subject_id\":\"3\",\"quarter_1_grade\":\"39\",\"quarter_2_grade\":\"33\",\"final_grade\":\"36.00\"},{\"subject_id\":\"9\",\"quarter_1_grade\":\"44\",\"quarter_2_grade\":\"27\",\"final_grade\":\"35.50\"}]}', '44.17', '35.75', '2024-06-02');
 
 -- --------------------------------------------------------
 
@@ -100,19 +110,8 @@ CREATE TABLE `students` (
   `age` varchar(191) DEFAULT NULL,
   `gender` varchar(50) DEFAULT NULL,
   `lrn` varchar(191) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `students`
---
-
-INSERT INTO `students` (`id`, `name`, `age`, `gender`, `lrn`, `status`, `created_at`) VALUES
-(5, 'Maya Sawyer', '1974-12-21', 'm', '01293847474', 0, '2024-05-21'),
-(8, 'sdd', '2011-11-07', 'f', '01293111747', 0, '2024-05-21'),
-(9, 'Adena Miranda', '1990-11-25', 'f', '2323234333', 0, '2024-05-21'),
-(10, 'Jelani Santos', '1985-11-15', 'f', '1443434343', 0, '2024-05-27');
 
 -- --------------------------------------------------------
 
@@ -125,26 +124,26 @@ CREATE TABLE `subjects` (
   `name` varchar(191) NOT NULL,
   `subject_code` varchar(191) DEFAULT NULL,
   `subject_type` tinyint(1) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 0
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `subjects`
 --
 
-INSERT INTO `subjects` (`id`, `name`, `subject_code`, `subject_type`, `status`) VALUES
-(3, 'Personal Development', '', 1, 0),
-(9, 'Pagbasa at Pagsusuri ng Ibat Ibang Teskto Tungo sa Pananaliksik', '', 1, 0),
-(10, 'Physical Education and Health 3', '', 1, 0),
-(11, 'Practical Research 2', '', 2, 0),
-(12, 'Filipino sa Piling Larangan', '', 2, 0),
-(13, 'English for Academic and Professional Purposes', '', 2, 0),
-(14, 'Contemporary Philippine Arts from the Regions', '', 1, 0),
-(15, 'Physical Education and Health 4', '', 1, 0),
-(16, 'Empowerment Technologies', '', 2, 0),
-(17, 'Entrepreneurship', '', 1, 0),
-(18, 'General Physics 2', '', 2, 0),
-(19, 'General Chemistry 2', 'Chloe Osborn', 2, 0);
+INSERT INTO `subjects` (`id`, `name`, `subject_code`, `subject_type`, `created_at`) VALUES
+(3, 'Personal Development', '', 1, '2024-05-31 19:35:24'),
+(9, 'Pagbasa at Pagsusuri ng Ibat Ibang Teskto Tungo sa Pananaliksik', '', 1, '2024-05-31 19:35:24'),
+(10, 'Physical Education and Health 3', '', 1, '2024-05-31 19:35:24'),
+(11, 'Practical Research 2', '', 2, '2024-05-31 19:35:24'),
+(12, 'Filipino sa Piling Larangan', '', 2, '2024-05-31 19:35:24'),
+(13, 'English for Academic and Professional Purposes', '', 1, '2024-05-31 19:35:24'),
+(14, 'Contemporary Philippine Arts from the Regions', '', 1, '2024-05-31 19:35:24'),
+(15, 'Physical Education and Health 4', '', 1, '2024-05-31 19:35:24'),
+(16, 'Empowerment Technologies', '', 2, '2024-05-31 19:35:24'),
+(17, 'Entrepreneurship', '', 1, '2024-05-31 19:35:24'),
+(18, 'General Physics 2', '', 2, '2024-05-31 19:35:24'),
+(19, 'General Chemistry 2', 'Chloe Osborn', 2, '2024-05-31 19:35:24');
 
 --
 -- Indexes for dumped tables
@@ -160,6 +159,12 @@ ALTER TABLE `admins`
 -- Indexes for table `classes`
 --
 ALTER TABLE `classes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `class_record`
+--
+ALTER TABLE `class_record`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -188,31 +193,37 @@ ALTER TABLE `subjects`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `classes`
 --
 ALTER TABLE `classes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+
+--
+-- AUTO_INCREMENT for table `class_record`
+--
+ALTER TABLE `class_record`
+  MODIFY `id` int(111) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `grades`
 --
 ALTER TABLE `grades`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `subjects`
 --
 ALTER TABLE `subjects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

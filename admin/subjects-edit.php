@@ -39,12 +39,6 @@
                                 <option value="2" <?= $subject['data']['subject_type'] == 2 ? 'selected' : ''; ?>>Applied and Specialized Subjects</option>
                             </select>
                         </div>
-                        <div class="col-md-12 mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" name="status" type="checkbox" <?= $subject['data']['status'] == true ? 'checked' : ''; ?>>
-                                <label class="form-check-label">Status (unchecked=visible, checked=hidden)</label>
-                            </div>
-                        </div>
                         <div class="col-md-12 mb-3 text-end">
                             <button type="submit" name="updateSubject" class="btn btn-primary">Update</button>
                         </div>

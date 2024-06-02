@@ -27,12 +27,6 @@
                             <option value="2">Applied and Specialized Subjects</option>
                         </select>
                     </div>
-                    <div class="col-md-12 mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" name="status" type="checkbox">
-                            <label class="form-check-label">Status (unchecked=visible, checked=hidden)</label>
-                        </div>
-                    </div>
                     <div class="col-md-12 mb-3 text-end">
                         <button type="submit" name="saveSubject" class="btn btn-primary">Save</button>
                     </div>

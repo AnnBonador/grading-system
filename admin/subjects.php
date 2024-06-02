@@ -26,7 +26,7 @@
                                 <th>Name</th>
                                 <th>Subject Code</th>
                                 <th>Subject Type</th>
-                                <th>Status</th>
+                                <th>Date Created</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -49,17 +49,10 @@
                                         }
                                         ?>
                                     </td>
-                                    <td>
-                                        <?php
-                                        if ($item['status'] == 1) {
-                                            echo '<span class="badge bg-success">Inactive</span>';
-                                        } else {
-                                            echo '<span class="badge bg-primary">Active</span>';
-                                        } ?>
-                                    </td>
+                                    <td><?= convertToDateOnly($item['created_at']) ?></td>
                                     <td>
                                         <a href="subjects-edit.php?id=<?= $item['id']; ?>" class="btn btn-success btn-sm">Edit</a>
-                                        <a href="subjects-delete.php?id=<?= $item['id']; ?>" class="btn btn-danger btn-sm">Delete</a>
+                                        <a href="subjects-delete.php?id=<?= $item['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this data?')">Delete</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -82,6 +75,8 @@
 <?php include('includes/footer.php') ?>
 <script>
 $(document).ready(function() {
-    $('#subjects_table').DataTable();
+    $('#subjects_table').DataTable({
+        "order": [[0, "desc"]] 
+    });
 });
 </script>

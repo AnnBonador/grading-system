@@ -27,7 +27,7 @@
                                 <th>Age</th>
                                 <th>Gender</th>
                                 <th>LRN</th>
-                                <th>Status</th>
+                                <th>Date Created</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -49,14 +49,7 @@
                                         ?>
                                     </td>
                                     <td><?= $item['lrn'] ?></td>
-                                    <td>
-                                        <?php
-                                        if ($item['status'] == 1) {
-                                            echo '<span class="badge bg-success">Inactive</span>';
-                                        } else {
-                                            echo '<span class="badge bg-primary">Active</span>';
-                                        } ?>
-                                    </td>
+                                    <td><?= convertToDateOnly($item['created_at']) ?></td>
                                     <td>
                                         <a href="students-edit.php?id=<?= $item['id']; ?>" class="btn btn-success btn-sm">Edit</a>
                                         <a href="students-delete.php?id=<?= $item['id']; ?>" class="btn btn-danger btn-sm"

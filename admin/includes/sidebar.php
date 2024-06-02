@@ -87,23 +87,23 @@ $page = substr($_SERVER['SCRIPT_NAME'], strrpos($_SERVER['SCRIPT_NAME'], "/") + 
                     </nav>
                 </div>
 
-                <div class="sb-sidenav-menu-heading">Student Record</div>
+                <div class="sb-sidenav-menu-heading">Academic Record</div>
 
                 <a class="nav-link 
-                <?= $page == 'admins-create.php' ? 'collapse active' : 'collapsed'; ?>
-                <?= $page == 'grades.php' ? 'collapse active' : 'collapsed'; ?>
+                <?= $page == 'class-record-create.php' ? 'collapse active' : 'collapsed'; ?>
+                <?= $page == 'class-record' ? 'collapse active' : 'collapsed'; ?>
                 " href="" data-bs-toggle="collapse" data-bs-target="#collapseGrades" aria-expanded="false" aria-controls="collapseGrades">
                     <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                    Grades
+                    Class Record
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
                 <div class="collapse
-                <?= $page == 'admins-create.php' ? 'show' : ''; ?>
-                <?= $page == 'grades.php' ? 'show' : ''; ?>
+                <?= $page == 'class-record-create.php' ? 'show' : ''; ?>
+                <?= $page == 'class-record.php' ? 'show' : ''; ?>
                 " id="collapseGrades" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link <?= $page == 'admins-create.php' ? 'active' : ''; ?>" href="admins-create.php">Add Admin</a>
-                        <a class="nav-link <?= $page == 'grades.php' ? 'active' : ''; ?>" href="grades.php">View Grades</a>
+                    <a class="nav-link <?= $page == 'class-record-create.php' ? 'active' : ''; ?>" href="class-record-create.php">Add Class Record</a>
+                        <a class="nav-link <?= $page == 'class-record.php' ? 'active' : ''; ?>" href="class-record.php">View Class Record</a>
                     </nav>
                 </div>
 

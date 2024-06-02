@@ -49,12 +49,6 @@
                             <label for="">LRN *</label>
                             <input type="number" name="lrn" class="form-control" value="<?= $student['data']['lrn']; ?>" required />
                         </div>
-                        <div class="col-md-12 mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" name="status" type="checkbox" <?= $student['data']['status'] == true ? 'checked' : ''; ?>>
-                                <label class="form-check-label">Status (unchecked=visible, checked=hidden)</label>
-                            </div>
-                        </div>
                         <div class="col-md-12 mb-3 text-end">
                             <button type="submit" name="updateStudent" class="btn btn-primary">Update</button>
                         </div>

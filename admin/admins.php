@@ -27,6 +27,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Role</th>
+                                <th>Date Created</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -38,6 +39,7 @@
                                     <td><?= $admin['name'] ?></td>
                                     <td><?= $admin['email'] ?></td>
                                     <td><?= $admin['role'] ?></td>
+                                    <td><?= convertToDateOnly($admin['created_at']) ?></td>
                                     <td>
                                         <a href="admins-edit.php?id=<?= $admin['id']; ?>" class="btn btn-success btn-sm">Edit</a>
                                         <a href="admins-delete.php?id=<?= $admin['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this data?')">Delete</a>

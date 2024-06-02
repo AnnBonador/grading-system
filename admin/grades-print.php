@@ -633,7 +633,7 @@ $pdf->writeHTML($html, true, false, false, false, "");
 // -----------------------------------------------------------------------------
 
 //Close and output PDF document
-$pdf->Output("example_048.pdf", "I");
+$pdf->Output('form138_'.$row["name"].'.pdf', 'D');
 } else {
    // Handle the error when ID is not found
    die("Error: ID not found or invalid.");

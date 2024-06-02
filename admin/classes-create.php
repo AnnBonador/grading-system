@@ -20,8 +20,15 @@
                         <label for="">Academic Year *</label>
                         <select name="academic_year" class="form-control select2" required>
                             <option value="">-- Select --</option>
-                            <option value="2023-2024">2023-2024</option>
-                            <option value="2024-2025">2024-2025</option>
+                            <?php
+                            $current_year = date('Y');
+                            for ($i = -1; $i < 3; $i++) {
+                                $start_year = $current_year + $i;
+                                $end_year = $start_year + 1;
+                                $academic_year = $start_year . '-' . $end_year;
+                                echo "<option value=\"$academic_year\">$academic_year</option>";
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>
@@ -80,43 +87,48 @@
 
     function addRow(tableBody, semester) {
         var newRow = `
-<tr>
-	<td>
-		<select name="subjects[${semester}][]" class="form-control select2" style="width: 100%;" required>
-			<option value="" selected disabled>-- Select --</option>
-			<?php
-            $subjects = getAll('subjects');
-            if ($subjects && mysqli_num_rows($subjects) > 0) {
-                while ($subject = mysqli_fetch_assoc($subjects)) {
-                    echo '<option value="' . $subject['id'] . '">' . $subject['name'] . '</option>';
-                }
-            } else {
-                echo '<option value="">No subjects available</option>';
-            }
-            ?>
-		</select>
-	</td>
-	<td>
-		<select name="teachers[${semester}][]" class="form-control select2" style="width: 100%;">
-			<option value="" selected disabled>-- Select --</option>
-			<?php
-            $teachers = getTeachers('admins');
-            if ($teachers && mysqli_num_rows($teachers) > 0) {
-                while ($teacher = mysqli_fetch_assoc($teachers)) {
-                    echo '<option value="' . $teacher['id'] . '">' . $teacher['name'] . '</option>';
-                }
-            } else {
-                echo '<option value="">No teachers available</option>';
-            }
-            ?>
-		</select>
-	</td>
-	<td>
+            <tr>
+                <td>
+                    <select name="subjects[${semester}][]" class="form-control select2" style="width: 100%;" required>
+                        <option value="" selected disabled>-- Select --</option>
+                        <?php
+                        $subjects = getAll('subjects');
+                        if ($subjects && mysqli_num_rows($subjects) > 0) {
+                            while ($subject = mysqli_fetch_assoc($subjects)) {
+                                echo '<option value="' . $subject['id'] . '">';
+                                if ($subject['subject_code']) {
+                                    echo $subject['subject_code'] . ' | ';
+                                }
+                                echo $subject['name'];
+                                echo '</option>';
+                            }
+                        } else {
+                            echo '<option value="">No subjects available</option>';
+                        }
+                        ?>
+                    </select>
+	            </td>
+	            <td>
+		            <select name="teachers[${semester}][]" class="form-control select2" style="width: 100%;">
+                        <option value="" selected disabled>-- Select --</option>
+                        <?php
+                        $teachers = getTeachers('admins');
+                        if ($teachers && mysqli_num_rows($teachers) > 0) {
+                            while ($teacher = mysqli_fetch_assoc($teachers)) {
+                                echo '<option value="' . $teacher['id'] . '">' . $teacher['name'] . '</option>';
+                            }
+                        } else {
+                            echo '<option value="">No teachers available</option>';
+                        }
+                        ?>
+                    </select>
+                </td>
+	        <td>
 		<button type="button" class="btn btn-danger removeRow">Remove</button>
 	</td>
 </tr>
 `;
-        $(tableBody).append(newRow);
-        initializeSelect2WithClose(".select2"); // Re-initialize Select2 for new rows with close button
-    }
+    $(tableBody).append(newRow);
+    initializeSelect2WithClose(".select2"); // Re-initialize Select2 for new rows with close button
+}
 </script>

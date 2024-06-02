@@ -19,7 +19,7 @@ function redirect($url, $status){
 
 function alertMessage(){
     if(isset($_SESSION['status'])){
-        echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+        echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
             <h6>'.$_SESSION['status'].'</h6>
             <button type="button" class="btn btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>';
@@ -171,12 +171,35 @@ function isNameUnique($table, $name, $excludeId = null){
     return $result['count'] == 0;
 }
 
+function isStudentIdUniqueForRecord($table, $student_id, $record_id, $excludeId = null) {
+    // Construct the SQL query
+    $query = "SELECT COUNT(*) as count FROM $table WHERE student_id = ? AND record_id = ?";
+    $params = [$student_id, $record_id];
+    
+    if ($excludeId) {
+        $query .= " AND id != ?";
+        $params[] = $excludeId;
+    }
+
+    $result = executeQuery($query, $params);
+    return $result['count'] == 0;
+}
+
+
 function calculateAge($birthDate) {
     // Create a DateTime object from the birth date
     $birthDate = new DateTime($birthDate);
     $currentDate = new DateTime();
     $age = $currentDate->diff($birthDate);
     return $age->y;
+}
+
+function convertToDateOnly($datetime) {
+    // Create a DateTime object from the datetime string
+    $date = new DateTime($datetime);
+    
+    // Format the DateTime object to only display the date
+    return $date->format('Y-m-d');
 }
 
 function getTeachers($tableName){
@@ -205,5 +228,143 @@ function getCount($tableName)
     }
 }
 
-?>
+function getName($table, $id)
+{
+    global $conn;
 
+    $query = "SELECT name FROM $table WHERE id='$id'";
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_assoc($result);
+
+    if ($row) {
+        echo $row['name'];
+    } else {
+        // Handle case where no rows were returned
+        echo "No data found";
+    }
+}
+function generateTable($class_id)
+{
+    global $conn;
+    $tableRowsSemester1 = '';
+    $tableRowsSemester2 = '';
+
+    $query = "SELECT * FROM classes WHERE id='$class_id'";
+    $result = mysqli_query($conn, $query);
+
+    if (mysqli_num_rows($result) > 0) {
+        $classData = mysqli_fetch_assoc($result);
+        $subjectsData = json_decode($classData['subjects'], true);
+
+        foreach ($subjectsData as $semester) {
+            $semesterNumber = $semester['semester'];
+            $tableRows = '';
+
+            foreach ($semester['subjects'] as $subject) {
+                $subjectId = $subject['subject_id'];
+
+                $subjectQuery = "SELECT name FROM subjects WHERE id='$subjectId'";
+                $subjectResult = mysqli_query($conn, $subjectQuery);
+                $subjectRow = mysqli_fetch_assoc($subjectResult);
+                $subjectName = $subjectRow['name'];
+
+                $tableRows .= '<tr>';
+                $tableRows .= '<td><input type="hidden" name="subject_id[]" value="' . $subjectId . '"/>' . $subjectName . '</td>';
+                $tableRows .= '<td><input type="number" class="form-control text-end" name="quarter1_' . $subjectId . '" required/></td>';
+                $tableRows .= '<td><input type="number" class="form-control text-end" name="quarter2_' . $subjectId . '"required/></td>';
+                $tableRows .= '<td></td>';
+                $tableRows .= '</tr>';
+            }
+
+            // Based on semester number, assign table rows to respective variables
+            if ($semesterNumber == 1) {
+                $tableRowsSemester1 = $tableRows;
+            } elseif ($semesterNumber == 2) {
+                $tableRowsSemester2 = $tableRows;
+            }
+        }
+    }
+
+    // Return an associative array containing table rows for each semester
+    return array('semester1' => $tableRowsSemester1, 'semester2' => $tableRowsSemester2);
+}
+
+function retrieveTable($class_id, $grades_json)
+{
+    global $conn;
+    $tableRowsSemester1 = '';
+    $tableRowsSemester2 = '';
+
+    $query = "SELECT * FROM classes WHERE id='$class_id'";
+    $result = mysqli_query($conn, $query);
+
+    if (mysqli_num_rows($result) > 0) {
+        $classData = mysqli_fetch_assoc($result);
+        $subjectsData = json_decode($classData['subjects'], true);
+        $grades = json_decode($grades_json, true); // Decode grades JSON string
+
+        foreach ($subjectsData as $semester) {
+            $semesterNumber = $semester['semester'];
+            $tableRows = '';
+
+            foreach ($semester['subjects'] as $subject) {
+                $subjectId = $subject['subject_id'];
+
+                $subjectQuery = "SELECT name FROM subjects WHERE id='$subjectId'";
+                $subjectResult = mysqli_query($conn, $subjectQuery);
+                $subjectRow = mysqli_fetch_assoc($subjectResult);
+                $subjectName = $subjectRow['name'];
+
+                // Find the grades for the current subject
+                $quarter1_grade = '';
+                $quarter2_grade = '';
+                $final_grade = '';
+
+                // Check if grades data is available for the current semester
+                if (isset($grades['semester' . $semesterNumber]) && is_array($grades['semester' . $semesterNumber])) {
+                    // Search for grades data in $grades
+                    foreach ($grades['semester' . $semesterNumber] as $grade) {
+                        if ($grade['subject_id'] == $subjectId) {
+                            $quarter1_grade = $grade['quarter_1_grade'];
+                            $quarter2_grade = $grade['quarter_2_grade'];
+                            $final_grade = $grade['final_grade'];
+                            break; // Stop searching once found
+                        }
+                    }
+                }
+
+                // Populate table rows with grades
+                $tableRows .= '<tr>';
+                $tableRows .= '<td><input type="hidden" name="subject_id[]" value="' . $subjectId . '"/>' . $subjectName . '</td>';
+                $tableRows .= '<td><input type="number" class="form-control text-end" name="quarter1_' . $subjectId . '" value="' . $quarter1_grade . '" required/></td>';
+                $tableRows .= '<td><input type="number" class="form-control text-end" name="quarter2_' . $subjectId . '" value="' . $quarter2_grade . '" required/></td>';
+                $tableRows .= '<td>' . $final_grade . '</td>';
+                $tableRows .= '</tr>';
+            }
+
+            // Based on semester number, assign table rows to respective variables
+            if ($semesterNumber == 1) {
+                $tableRowsSemester1 = $tableRows;
+            } elseif ($semesterNumber == 2) {
+                $tableRowsSemester2 = $tableRows;
+            }
+        }
+    }
+
+    // Return an associative array containing table rows for each semester
+    return array('semester1' => $tableRowsSemester1, 'semester2' => $tableRowsSemester2);
+}
+
+function getGrades($tableName,$id){
+
+    global $conn;
+
+    $table = validate($tableName);
+
+    $query = "SELECT * FROM $table WHERE record_id='$id'";
+
+    return mysqli_query($conn,$query);
+
+}
+
+?>

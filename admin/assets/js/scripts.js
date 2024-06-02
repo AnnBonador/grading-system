@@ -10,7 +10,7 @@ function initializeSelect2WithClose(selector) {
     $(selector).select2({
         placeholder: "Select an option",
         allowClear: true,
-        theme: "bootstrap-5",
+        theme: 'bootstrap-5'
     });
 }
 

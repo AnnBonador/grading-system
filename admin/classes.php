@@ -25,6 +25,7 @@
                                 <th>ID</th>
                                 <th>Class Name</th>
                                 <th>Academic Year</th>
+                                <th>Date Created</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -34,6 +35,7 @@
                                     <td><?= $item['id'] ?></td>
                                     <td><?= $item['name'] ?></td>
                                     <td><?= $item['academic_year'] ?></td>
+                                    <td><?= convertToDateOnly($item['created_at']) ?></td>
                                     <td>
                                         <a href="classes-edit.php?id=<?= $item['id']; ?>" class="btn btn-success btn-sm">Edit</a>
                                         <a href="classes-delete.php?id=<?= $item['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this data?')">Delete</a>
@@ -59,6 +61,8 @@
 <?php include('includes/footer.php') ?>
 <script>
 $(document).ready(function() {
-    $('#classes_table').DataTable();
+    $('#classes_table').DataTable({
+        "order": [[0, "desc"]] 
+    });
 });
 </script>

@@ -14,7 +14,7 @@ if (is_numeric($paraResultId)) {
         $response = delete('classes', $classId);
 
         if ($response) {
-            redirect('classes.php', 'Classes Deleted Successfully');
+            redirect('classes.php', 'Class Deleted Successfully');
         } else {
             redirect('classes.php', 'Something Went Wrong');
         }
